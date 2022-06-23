@@ -17,10 +17,49 @@ var StopWatch = function (_React$Component) {
     _this.state = {
       timePassedInMilliseconds: 0
     };
+
+    _this.timer = null;
+
+    _this.start = _this.start.bind(_this);
+    _this.stop = _this.stop.bind(_this);
+    _this.reset = _this.reset.bind(_this);
     return _this;
   }
 
   _createClass(StopWatch, [{
+    key: "start",
+    value: function start() {
+      var _this2 = this;
+
+      if (!this.timer) {
+        var startTime = Date.now();
+        this.timer = setInterval(function () {
+          var stopTime = Date.now();
+          var timePassedInMilliseconds = stopTime - startTime + _this2.state.timePassedInMilliseconds;
+
+          _this2.setState({
+            timePassedInMilliseconds: timePassedInMilliseconds
+          });
+
+          startTime = stopTime;
+        }, 250);
+      }
+    }
+  }, {
+    key: "stop",
+    value: function stop() {
+      window.clearInterval(this.timer);
+      this.timer = null;
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.stop();
+      this.setState({
+        timePassedInMilliseconds: 0
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       return React.createElement(
@@ -37,17 +76,17 @@ var StopWatch = function (_React$Component) {
           { className: "d-flex justify-content-center" },
           React.createElement(
             "button",
-            { className: "btn btn-outline-primary mr-2" },
+            { className: "btn btn-outline-primary mr-2", onClick: this.start },
             "start"
           ),
           React.createElement(
             "button",
-            { className: "btn btn-outline-danger mr-2" },
+            { className: "btn btn-outline-danger mr-2", onClick: this.stop },
             "stop"
           ),
           React.createElement(
             "button",
-            { className: "btn btn-outline-warning" },
+            { className: "btn btn-outline-warning", onClick: this.reset },
             "reset"
           )
         )
